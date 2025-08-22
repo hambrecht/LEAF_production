@@ -79,7 +79,7 @@ def get_MonthName(month_numb):
 # Revision history:  2024-Feb-27  Lixin Sun  Initial creation
 #
 #############################################################################################################
-def has_custom_region(inParams):  
+def is_custom_region(inParams):  
   n_custom_regions = len(inParams['regions']) if 'regions' in inParams else 0
   
   if 'scene_ID' not in inParams:
@@ -97,7 +97,7 @@ def has_custom_region(inParams):
 # Revision history:  2024-Feb-27  Lixin Sun  Initial creation
 #
 #############################################################################################################
-def has_custom_windows(inParams):
+def is_custom_window(inParams):
   start_len = len(inParams['start_dates']) if 'start_dates' in inParams else 0
   end_len   = len(inParams['end_dates']) if 'end_dates' in inParams else 0
 
@@ -106,7 +106,7 @@ def has_custom_windows(inParams):
     custom_time = True
   
   elif start_len >= 1 and end_len >= 1 and start_len != end_len:  
-    print('\n<has_custom_window> Inconsistent customized time list!')
+    print('\n<is_custom_window> Inconsistent customized time list!')
   
   return custom_time
   
@@ -212,7 +212,7 @@ def valid_params(inParams):
     print('<valid_user_params> Invalid number of years was specified!')
   
   # Confirm 'months' parameter
-  if not has_custom_windows(inParams):
+  if not is_custom_window(inParams):
     nMonths = len(inParams['months'])
     if nMonths < 1:
       all_valid = False
@@ -225,7 +225,7 @@ def valid_params(inParams):
         print('<valid_user_params> Invalid month number was specified!')
   
   # Confirm 'tile_names' parameter
-  if not has_custom_region(inParams):
+  if not is_custom_region(inParams):
     tile_names = inParams['tile_names']
     nTiles = len(tile_names)
     if nTiles < 1:
@@ -281,7 +281,7 @@ def valid_params(inParams):
 #
 #############################################################################################################
 def form_time_windows(inParams):
-  if not has_custom_windows(inParams):
+  if not is_custom_window(inParams):
     #There is no customized time window defined
     inParams['monthly'] = True
     nMonths = len(inParams['months'])  # get the number of specified months
@@ -318,7 +318,7 @@ def form_time_windows(inParams):
 #
 #############################################################################################################
 def form_spatial_regions(inParams):
-  if not has_custom_region(inParams):
+  if not is_custom_region(inParams):
     inParams['regions'] = {}
     for tile_name in inParams['tile_names']:      
       if eoTG.is_valid_tile_name(tile_name):
@@ -342,7 +342,7 @@ def form_spatial_regions(inParams):
 #                    2024-Apr-08  Lixin Sun  Incorporated modifications according to customized time window
 #                                            and spatial region.
 #                    2024-Sep-03  Lixin Sun  Adjusted to ensure that regular months/season will also be 
-#                                            handled as customized time windows.    
+#                                            handled as customized time window.    
 #############################################################################################################
 def update_default_params(inParams):  
   out_Params = DefaultParams
@@ -495,3 +495,4 @@ def get_time_window(inParams, ee_Date_format = True):
 
 
 # update_default_params(params)
+
